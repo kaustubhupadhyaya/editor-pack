@@ -1,0 +1,64 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets — never commit real credentials (see skills/ig-saved-collections/.env.example)
+.env
+.env.*
+!.env.example
+creds.env
+ig_session.json
+*cookies*.txt
+.pw-profile/
+.pw-profile.*/
+client_secret*.json
+token.json
+
+# Large / rendered media — track sources and recipes, not exports.
+# Un-ignore specific sample clips with e.g. `!skills/foo/sample.mp4` if needed.
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.wav
+*.mp3
+*.aiff
+*.m4a
+exports/
+renders/
+tmp/
+
+# ig-saved-collections / yt-saved-playlists: generated data, not a repo asset.
+# saved_export/ and yt_export/ are directory JUNCTIONS to D:\EditorPackArchive\
+# (see each skill's SKILL.md) -- git would otherwise walk straight through them
+# and try to track everything on the archive drive.
+skills/ig-saved-collections/scripts/collections*.json
+skills/ig-saved-collections/scripts/saved_export/
+skills/yt-saved-playlists/scripts/yt_export/
+skills/yt-saved-playlists/scripts/playlists.json
+skills/yt-saved-playlists/scripts/benchmarks/
+skills/phone-media-bridge/scripts/phone_pull/
+skills/ig-saved-collections/saved_export/
+skills/ig-saved-collections/extract_*.log
+
+# Local-only working files - not published.
+.ua/
+skills/ig-api-publisher/
+brag-output/

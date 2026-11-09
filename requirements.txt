@@ -1,0 +1,62 @@
+# editor-pack — Python dependencies for the video-editing skills.
+#
+#   pip install --user -r requirements.txt
+#
+# Tested on Python 3.14.0 (Windows). Versions below are the known-good floors.
+# NOTE: this file covers pip packages only. External (non-pip) tools — ffmpeg,
+# Blender, DaVinci Resolve — are NOT installable here; run setup.ps1 (installs
+# ffmpeg via winget and verifies the rest) or see the "Setup" section in README.md.
+
+# --- reel-maker ---------------------------------------------------------------
+yt-dlp[default,curl-cffi]>=2026.8.19  # download the reference reel/video (merges via ffmpeg);
+                           #   curl-cffi extra = browser impersonation Instagram's extractor
+                           #   now requires (added Jun-Jul 2026) -- plain yt-dlp gets a
+                           #   "no impersonate target available" error on IG without it.
+stable-ts>=2.19.1          # captioning: word-level timestamps (Whisper w/ refined timing)
+                           #   pulls torch(CPU) + torchaudio + openai-whisper + numba + tiktoken.
+                           #   Whisper 'base' model (~140 MB) auto-downloads on first run.
+                           #   Also used by ig-saved-collections' extract_saved.py --transcribe
+                           #   (spoken-word transcript of a saved reel's audio).
+
+# --- clip-picker --------------------------------------------------------------
+numpy>=2.4                 # frame sharpness scoring (variance-of-Laplacian)
+pillow>=9.2,<12            # contact-sheet / thumbnail assembly
+                           #   capped <12 because moviepy 2.2.1 requires pillow<12;
+                           #   pillow 11.3.0 has Python 3.14 wheels and works for both.
+
+# --- video-tool-router --------------------------------------------------------
+moviepy>=2.2               # scripted edits / composites
+auto-editor>=29.3          # silence / filler auto-cutting (fetches a native binary on first run)
+
+# --- ig-saved-collections -------------------------------------------------------
+gallery-dl>=1.32.9         # bulk-download the raw video files of a saved collection (cookie auth)
+instagrapi>=2.18.18        # list collections by name + extract per-reel info (caption, owner,
+                           #   stats, audio, permalink); session-cookie login only, never password
+python-dotenv>=1.0         # loads IG_SESSIONID from skills/ig-saved-collections/.env
+                           #   (never pass it on the command line -- shell history)
+playwright>=1.48           # refresh_session.py: real-browser login to auto-refresh IG_SESSIONID
+                           #   when it expires. Also needs `python -m playwright install chromium`
+                           #   once (not a pip package -- downloads the browser binary).
+pyyaml>=6.0                # to_second_brain.py: validates the note's YAML frontmatter parses BEFORE
+                           #   writing into the Second Brain vault. Optional-but-recommended: an
+                           #   unparseable `summary:` makes a note invisible to Drive connectors,
+                           #   and that failure is silent (the file still looks correct).
+
+# --- yt-saved-playlists ---------------------------------------------------------
+google-api-python-client>=2.199   # official YouTube Data API v3 (own/private playlists via OAuth)
+google-auth-oauthlib>=1.4         # the OAuth browser flow + token refresh
+youtube-transcript-api>=1.2.4     # dedicated caption/transcript fetcher (primary; yt-dlp is fallback)
+
+# --- heavy transitive deps (pip resolves these automatically via stable-ts) ---
+# torch==2.13.0            # CPU build; the version with Python 3.14 wheels
+# torchaudio==2.11.0
+# openai-whisper==20250625
+# numba==0.66.0            # + llvmlite
+# tiktoken==0.13.0
+#
+# Do NOT add whisperx (no wheels for Python 3.14) or faster-whisper (unused).
+
+# --- phone-media-bridge (stdlib only, no new deps) ---
+# inventory.py / pull.py / push_reel.py use argparse + json + pathlib +
+# subprocess (adb CLI) only. adb itself is external (winget platform-tools),
+# not a pip package -- see the skill's SKILL.md Phase 0.
